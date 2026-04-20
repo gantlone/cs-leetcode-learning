@@ -1,0 +1,11 @@
+# .NET
+bin/
+obj/
+*.user
+.vs/
+
+# macOS
+.DS_Store
+
+# 個人設定（不推上 git）
+.claude/settings.local.json
