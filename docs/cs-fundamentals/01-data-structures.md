@@ -7,7 +7,7 @@
 - [x] `Array` vs `List<T>` vs `LinkedList<T>`：什麼情況選哪個
 - [x] 時間複雜度：隨機存取 O(1)、插入/刪除 O(n) 的原因
 - [x] 字串不可變性（immutable）：為什麼 `+=` 很慢，`StringBuilder` 何時用
-- [ ] 練習：實作一個 circular buffer（環形緩衝區）
+- [x] 練習：實作一個 circular buffer（環形緩衝區）
 
 **Stack & Queue**
 - [x] Stack（LIFO）：call stack、遞迴本質是 stack
@@ -21,7 +21,7 @@
 - [x] `Dictionary<K,V>` 的時間複雜度：平均 O(1) vs 最壞 O(n)
 - [x] `HashSet<T>` vs `Dictionary<K,V>` 的使用場景
 - [x] 面試常見模式：Two Sum 為什麼用 HashMap 解
-- [ ] 練習：設計一個 LRU Cache（不用程式庫）
+- [x] 練習：設計一個 LRU Cache（不用程式庫）
 
 **Tree**
 - [ ] Tree 基本術語：root、leaf、height、depth
@@ -99,6 +99,67 @@
 
 **面試這樣說：**
 > "`List.Add()` 通常是 O(1)，但觸發擴容時是 O(n)，均攤下來是 O(1)。"
+
+---
+
+## 練習：Circular Buffer（環形緩衝區）
+> 學習日期：2026-04-22
+
+**概念說明：**
+用固定大小陣列模擬環形 Queue，滿了自動覆蓋最舊的資料。
+
+**核心公式：** `(index + 1) % capacity`（讓陣列變成環形）
+
+**實際用途：** 監視器錄影、log 系統（只保留最新 N 筆）
+
+```csharp
+public class CircularBuffer
+{
+    private int[] _buffer;
+    private int _head;      // 下一個讀的位置
+    private int _tail;      // 下一個寫的位置
+    private int _count;     // 目前有幾個元素
+    private int _capacity;
+
+    public CircularBuffer(int capacity)
+    {
+        _capacity = capacity;
+        _buffer = new int[capacity];
+    }
+
+    public void Enqueue(int value)
+    {
+        if (_count == _capacity)
+            _head = (_head + 1) % _capacity;  // 滿了：放棄最舊的，head 往前
+        else
+            _count++;
+
+        _buffer[_tail] = value;
+        _tail = (_tail + 1) % _capacity;
+    }
+
+    public int Dequeue()
+    {
+        if (_count == 0)
+            throw new InvalidOperationException("Buffer is empty");
+
+        int value = _buffer[_head];
+        _head = (_head + 1) % _capacity;
+        _count--;
+        return value;
+    }
+}
+```
+
+**使用範例：**
+```csharp
+var buffer = new CircularBuffer(3);
+buffer.Enqueue(1);  // [1, _, _]
+buffer.Enqueue(2);  // [1, 2, _]
+buffer.Enqueue(3);  // [1, 2, 3] 滿了
+buffer.Enqueue(4);  // [4, 2, 3] 1 被覆蓋
+buffer.Dequeue();   // 取出 3（最舊的）
+```
 
 ---
 
@@ -230,6 +291,74 @@ public int[] TwoSum(int[] nums, int target)
 }
 ```
 關鍵：**先查再存**，否則 `[3,3] target=6` 會把自己查到。
+
+---
+
+## 練習：LRU Cache
+> 學習日期：2026-04-22
+
+**概念說明：**
+LRU = Least Recently Used，容量滿時踢掉最久沒被用到的資料。
+
+**核心思路：Dictionary + LinkedList 合體**
+- `Dictionary` → O(1) 查 key
+- `LinkedList` → 維護使用順序，最近用的放頭，最久沒用的在尾
+
+```csharp
+public class LRUCache
+{
+    private int _capacity;
+    private Dictionary<int, LinkedListNode<(int key, int value)>> _dict;
+    private LinkedList<(int key, int value)> _list;
+
+    public LRUCache(int capacity)
+    {
+        _capacity = capacity;
+        _dict = new Dictionary<int, LinkedListNode<(int key, int value)>>();
+        _list = new LinkedList<(int key, int value)>();
+    }
+
+    public int Get(int key)
+    {
+        if (!_dict.ContainsKey(key)) return -1;
+        var node = _dict[key];
+        _list.Remove(node);
+        _list.AddFirst(node);  // 移到最前面（最近用過）
+        return node.Value.value;
+    }
+
+    public void Put(int key, int value)
+    {
+        if (_dict.ContainsKey(key))
+        {
+            var node = _dict[key];
+            _list.Remove(node);
+            _list.AddFirst(node);
+            _list.First.Value = (key, value);
+            _dict[key] = _list.First;
+            return;
+        }
+        if (_dict.Count == _capacity)
+        {
+            var last = _list.Last;
+            _dict.Remove(last.Value.key);
+            _list.RemoveLast();  // 踢掉最久沒用的（尾巴）
+        }
+        _list.AddFirst((key, value));
+        _dict[key] = _list.First;
+    }
+}
+```
+
+**使用範例：**
+```
+LRUCache(2)
+Put(1,1) → list: [1]
+Put(2,2) → list: [2,1]
+Get(1)   → list: [1,2]  （1 移到頭）
+Put(3,3) → 踢掉 2 → list: [3,1]
+Get(2)   → -1（已被踢掉）
+```
 
 ---
 

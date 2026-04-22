@@ -7,7 +7,7 @@
 
 ## 當前狀態
 - 目前 Phase：Phase 1 - 資料結構
-- 最後學到：Hash Table（Hash Function、Collision、Dictionary vs HashSet、Two Sum）
+- 最後學到：Hash Table 練習 Circular Buffer + LRU Cache
 - 卡關問題：（無）
 
 ## 今日學習
