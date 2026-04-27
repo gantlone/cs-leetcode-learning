@@ -29,7 +29,7 @@
 - [x] BST 退化問題 → 引出平衡樹概念（AVL/Red-Black，知道概念即可）
 - [x] Heap（Min/Max）：`PriorityQueue<T,P>` 在 C# 怎麼用
 - [x] Trie（前綴樹）：字典搜尋、autocomplete 應用
-- [ ] 練習：手寫 BST insert + inorder traversal
+- [x] 練習：手寫 BST insert + inorder traversal
 
 **Graph**
 - [ ] 圖的表示法：Adjacency List vs Adjacency Matrix（各自優劣）
@@ -598,3 +598,104 @@ root
 | 找前綴開頭的所有字 | O(L + 結果數量) |
 
 **使用場景：** 搜尋引擎 autocomplete、拼字檢查、IP routing
+
+---
+
+## 練習：手寫 BST Insert + Inorder Traversal
+> 學習日期：2026-04-27
+
+### 節點結構
+```csharp
+public class TreeNode
+{
+    public int Val;
+    public TreeNode Left;   // 記憶體地址，指向左邊的 TreeNode
+    public TreeNode Right;  // 記憶體地址，指向右邊的 TreeNode
+
+    public TreeNode(int val) { Val = val; }
+}
+```
+
+`Left` / `Right` 不是另一棵樹，是**記憶體地址**（像紙條上寫著「左邊朋友住在哪裡」）。遞迴時每層的 `root` 變數名字一樣，但指向不同節點——換了一層就換一個人當主角。
+
+---
+
+### Insert
+```csharp
+public TreeNode Insert(TreeNode root, int val)
+{
+    if (root == null) return new TreeNode(val); // 空位 → 插入
+
+    if (val < root.Val)
+        root.Left = Insert(root.Left, val);     // 往左
+    else
+        root.Right = Insert(root.Right, val);   // 往右
+
+    return root;
+}
+```
+
+**執行範例：** 插入 4 到 `5→3`
+```
+Insert(5, 4)
+  4 < 5 → Insert(3, 4)
+    4 > 3 → Insert(null, 4)
+      null → 建立 TreeNode(4)，回傳
+    root.Right = 4，回傳 3
+  root.Left = 3，回傳 5
+
+結果：5 → 3 → Right:4
+```
+
+---
+
+### Inorder Traversal（中序走訪）
+規則：**左 → 自己 → 右**
+
+```csharp
+public void Inorder(TreeNode root, List<int> result)
+{
+    if (root == null) return;
+
+    Inorder(root.Left, result);    // 左
+    result.Add(root.Val);          // 自己（等左邊全部跑完才執行）
+    Inorder(root.Right, result);   // 右
+}
+```
+
+**BST + Inorder = 自動排序！**
+```
+      5
+     / \
+    3   7        Inorder 結果：[1, 3, 4, 5, 7]
+   / \
+  1   4
+```
+
+**關鍵：** 下一行要等上一行（含所有套娃）跑完才執行。套娃全部打開完，從最裡面開始收。
+
+**逐步執行（以上面那棵樹為例）：**
+```
+Inorder(5)
+  → 先執行 Inorder(5).左 = Inorder(3)
+      → 先執行 Inorder(3).左 = Inorder(1)
+          → 先執行 Inorder(1).左 = Inorder(null) → return
+          → 加入 1           ★ 最裡面，第一個輸出
+          → 執行 Inorder(1).右 = Inorder(null) → return
+      ← Inorder(1) 結束，回到 Inorder(3)
+      → 加入 3               ★ 第二個輸出
+      → 執行 Inorder(3).右 = Inorder(4)
+          → 先執行 Inorder(4).左 = Inorder(null) → return
+          → 加入 4           ★ 第三個輸出
+          → 執行 Inorder(4).右 = Inorder(null) → return
+      ← Inorder(4) 結束，回到 Inorder(3)
+  ← Inorder(3) 結束，回到 Inorder(5)
+  → 加入 5                   ★ 第四個輸出
+  → 執行 Inorder(5).右 = Inorder(7)
+      → 先執行 Inorder(7).左 = Inorder(null) → return
+      → 加入 7               ★ 第五個輸出
+      → 執行 Inorder(7).右 = Inorder(null) → return
+  ← Inorder(7) 結束
+
+最終 result = [1, 3, 4, 5, 7]
+```
