@@ -3,16 +3,17 @@
 ## 基本資訊
 - 開始日期：2026-04-20
 - 目標日期：2026-08-31
-- 最後更新：2026-04-21
+- 最後更新：2026-04-27
 
 ## 當前狀態
 - 目前 Phase：Phase 1 - 資料結構
-- 最後學到：Hash Table 練習 Circular Buffer + LRU Cache
+- 最後學到：Tree（BST、Heap、Trie）概念全部完成
+- 下一步：LeetCode Tree Easy（#104 Maximum Depth of Binary Tree）
 - 卡關問題：（無）
 
 ## 今日學習
-- 學了什麼：陣列記憶體結構、Array/List/LinkedList 複雜度、均攤 O(1)、字串不可變性、StringBuilder、時間複雜度直覺、Stack/Queue、Monotonic Stack、Hash Table、Two Sum 思路
-- 解了哪些題：（無，練習題 Circular Buffer / LRU Cache 進行中）
+- 學了什麼：Tree 術語（root/leaf/height）、BST 搜尋邏輯、O(log n) 直覺（每步砍一半）、BST 退化問題、Min/Max Heap、第K小用Max Heap技巧、Heap操作複雜度、Trie前綴樹原理
+- 解了哪些題：（無）
 
 ## LeetCode 統計
 - Easy 完成：0 / 20

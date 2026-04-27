@@ -24,11 +24,11 @@
 - [x] 練習：設計一個 LRU Cache（不用程式庫）
 
 **Tree**
-- [ ] Tree 基本術語：root、leaf、height、depth
-- [ ] Binary Search Tree（BST）：插入/搜尋/刪除邏輯
-- [ ] BST 退化問題 → 引出平衡樹概念（AVL/Red-Black，知道概念即可）
-- [ ] Heap（Min/Max）：`PriorityQueue<T,P>` 在 C# 怎麼用
-- [ ] Trie（前綴樹）：字典搜尋、autocomplete 應用
+- [x] Tree 基本術語：root、leaf、height、depth
+- [x] Binary Search Tree（BST）：插入/搜尋/刪除邏輯
+- [x] BST 退化問題 → 引出平衡樹概念（AVL/Red-Black，知道概念即可）
+- [x] Heap（Min/Max）：`PriorityQueue<T,P>` 在 C# 怎麼用
+- [x] Trie（前綴樹）：字典搜尋、autocomplete 應用
 - [ ] 練習：手寫 BST insert + inorder traversal
 
 **Graph**
@@ -222,6 +222,19 @@ string result = sb.ToString();  // 最後才建立一個字串
 - 兩層巢狀迴圈 → O(n²)
 - 每次把問題砍半（如二分搜尋）→ O(log n)
 - 一層迴圈裡面砍半 → O(n log n)（如 Merge Sort）
+
+**O(log n) 的直覺：**
+「除幾次 2 才能到 1，就需要幾步」
+
+```
+n = 1000：
+1000 → 500 → 250 → 125 → 62 → 31 → 15 → 7 → 3 → 1
+共除了 10 次 → log₂(1000) ≈ 10 步
+
+n = 1,000,000 → 只需 20 步
+```
+
+跟 O(n) 的差距巨大：n=100萬時，O(n) 要 100萬步，O(log n) 只要 20 步。
 
 ---
 
@@ -452,3 +465,136 @@ public int[] DailyTemperatures(int[] temperatures) {
 ```
 
 ---
+
+## Tree 基本術語
+> 學習日期：2026-04-27
+
+**生活比喻：** 公司組織圖，CEO 在最上面，往下展開。
+
+```
+        A          ← Root（根）：整棵樹的起點
+       / \
+      B   C        ← C 是 Leaf（葉節點）：沒有子節點
+     / \
+    D   E          ← D, E 也是 Leaf
+
+Height = 2（邊數算法：A→B→D 共 2 條邊）
+```
+
+**術語速查：**
+| 術語 | 說明 |
+|---|---|
+| Root | 最頂端節點，只有一個 |
+| Leaf | 沒有子節點的節點 |
+| Height | Root 到最深 Leaf 的邊數 |
+| Depth | 某節點到 Root 的邊數 |
+
+---
+
+## Binary Search Tree（BST）
+> 學習日期：2026-04-27
+
+**生活比喻：** 猜數字遊戲，每次從中間猜，把範圍砍一半。
+
+**唯一規則：** 左子樹所有節點 < 當前節點 < 右子樹所有節點
+
+**插入 5, 3, 7, 1, 4 的結果：**
+```
+      5
+     / \
+    3   7
+   / \
+  1   4
+```
+
+**搜尋 4 的路徑：** 5 → 3 → 4（比 3 次）
+
+**複雜度：**
+| 操作 | 平均 | 最壞 |
+|---|---|---|
+| 搜尋 | O(log n) | O(n) |
+| 插入 | O(log n) | O(n) |
+| 刪除 | O(log n) | O(n) |
+
+**O(log n) 的直覺：** 每步把節點數量除以 2，除幾次才到 1 就是幾步。n=1000 → 只需 10 步。
+
+**BST 退化問題：** 依序插入 1,2,3,4,5 → 樹變成一條鏈 → 退化成 O(n)。
+解法：AVL Tree / Red-Black Tree 自動保持平衡（知道概念即可，不需手寫）。
+
+---
+
+## Heap（堆）
+> 學習日期：2026-04-27
+
+**生活比喻：** 急診室候診，病情最重的優先看，不是先來先看。這就是 Priority Queue，底層是 Heap。
+
+**兩種 Heap：**
+- **Min Heap**：最小值在頂端（root）
+- **Max Heap**：最大值在頂端（root）
+
+**規則：** 每個父節點 < 子節點（Min Heap），左右子節點之間沒有大小關係（不是 BST！）
+
+```
+Min Heap 範例：
+        1
+       / \
+      3   2
+     / \
+    5   4
+```
+
+**複雜度：**
+| 操作 | 複雜度 |
+|---|---|
+| 看頂端 peek | O(1) |
+| 插入 push | O(log n) |
+| 取出頂端 pop | O(log n) |
+
+push/pop 是 O(log n) 因為需要重新調整結構（往上或往下比較），不像 Stack 的 O(1)。
+
+**C# 使用：**
+```csharp
+var minHeap = new PriorityQueue<int, int>();
+minHeap.Enqueue(3, 3);  // (值, 優先權)
+minHeap.Enqueue(1, 1);
+minHeap.Enqueue(2, 2);
+minHeap.Dequeue();  // 取出 1（最小）
+```
+
+**面試技巧 - 第 K 小/大：**
+> 第 K 小 → 用 Max Heap（大小維持 K）；第 K 大 → 用 Min Heap（反直覺！）
+
+原因：Max Heap 頂端是「目前 K 個裡最大的」，新元素比頂端小就替換，最後留下來的就是全部最小的 K 個。空間 O(K) 比 Min Heap 的 O(n) 更省。
+
+---
+
+## Trie（前綴樹）
+> 學習日期：2026-04-27
+
+**生活比喻：** 手機鍵盤自動補全，打 "ca" 出現 "cat"、"car"、"card"。
+
+**結構：** 每個節點代表一個字母，從 Root 走到 END 標記就是一個完整單字。
+
+```
+插入 cat、car、card、dog：
+
+root
+├── c
+│   └── a
+│       ├── t (END)
+│       └── r (END)
+│           └── d (END)
+└── d
+    └── o
+        └── g (END)
+```
+
+**複雜度：** 所有操作都是 **O(L)**，L = 字串長度，跟字典裡有幾個單字完全無關！
+
+| 操作 | 複雜度 |
+|---|---|
+| 插入單字 | O(L) |
+| 搜尋單字 | O(L) |
+| 找前綴開頭的所有字 | O(L + 結果數量) |
+
+**使用場景：** 搜尋引擎 autocomplete、拼字檢查、IP routing
