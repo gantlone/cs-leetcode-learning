@@ -7,6 +7,22 @@
 
 ---
 
+## 🎯 求職目標與學習限制
+
+**目標職位：** 台灣金融業 IT、大型科技公司、上市上櫃穩定公司資訊部
+**目標薪資：** 60-75k TWD
+**背景：** VB.NET 2 年、系統窗口 2 年、聯合大學電機碩士（AI）、無近期 side project
+**優勢：** 碩士學歷、公用事業系統導入經驗、C# 自學中
+
+**學習時間限制：**
+- 週末：每天 4-6 小時（主力學習日）
+- 平日：每天約 30 分鐘（複習為主，不學新東西）
+- 每週有效學習：約 10-11 小時
+
+**Side Project 策略：** 不另外做專案，把 LeetCode 解法整理成 GitHub repo（邊學邊累積），履歷上呈現「自學 C# 演算法，建立 GitHub 解題紀錄」
+
+---
+
 ## ⚡ 每次 Session 開始時（必做）
 
 **絕對必須**先執行以下步驟，再做任何事：
@@ -82,9 +98,16 @@ cs-leetcode-learning/
 
 ---
 
-## 🗺️ 學習路線圖（4.5 個月）
+## 🗺️ 學習路線圖（週末學習版）
 
-> 更新日期：2026-04 ｜ 目標：2026-08-31
+> 更新日期：2026-04-28 ｜ 目標：2026-08-31
+> 學習節奏：週末為主（每天 4-6h）+ 平日 30 分鐘複習
+> 可用週末：約 18 個 ｜ 總時數估算：約 180 小時
+>
+> **標記說明：**
+> - 正常項目 → 必學
+> - `[概念即可]` → 能口頭解釋，不用練題
+> - `[SKIP]` → 目標市場不考，跳過
 
 ---
 
@@ -124,8 +147,8 @@ cs-leetcode-learning/
 **Graph**
 - [ ] 圖的表示法：Adjacency List vs Adjacency Matrix（各自優劣）
 - [ ] BFS vs DFS：用途差異，面試選哪個的判斷依據
-- [ ] Topological Sort（拓樸排序）：為什麼面試常考（依賴關係問題）
-- [ ] Union-Find（Disjoint Set）：判斷連通性
+- [ ] Topological Sort（拓樸排序）`[概念即可]`：知道用途即可，不練題
+- [ ] ~~Union-Find（Disjoint Set）~~ `[SKIP]`
 - [ ] 練習：用 BFS 找出兩點之間最短路徑
 
 ---
@@ -151,19 +174,17 @@ cs-leetcode-learning/
 - [ ] 「答案二分」技巧：把最佳化問題轉成判斷問題
 - [ ] 練習：實作「找第一個 >= target 的位置」（lower_bound）
 
-**遞迴 & 回溯（Backtracking）**
+**遞迴（Backtracking 略過）**
 - [ ] 遞迴三要素：base case、遞迴關係、返回值
 - [ ] 遞迴 vs 迭代的取捨
-- [ ] 回溯模板：做選擇 → 遞迴 → 撤銷選擇
-- [ ] 剪枝（pruning）：怎麼讓回溯更快
-- [ ] 練習：用回溯產生所有子集合（Subsets）
+- [ ] ~~回溯模板、剪枝、Subsets 練習~~ `[SKIP]`：60-75k 目標市場幾乎不考
 
 **動態規劃（DP）**
 - [ ] DP 的本質：記憶化搜尋（top-down） vs 填表（bottom-up）
 - [ ] 找狀態定義：dp[i] 代表什麼
 - [ ] 找狀態轉移：dp[i] 怎麼從 dp[i-1] 來
 - [ ] 1D DP 模板：Fibonacci、爬樓梯、打家劫舍
-- [ ] 2D DP 模板：Longest Common Subsequence、編輯距離
+- [ ] ~~2D DP 模板：LCS、編輯距離~~ `[SKIP]`：進階，目標市場少考
 - [ ] 練習：用 DP 解「零錢兌換」(Coin Change)
 
 **Sliding Window & Two Pointers**
@@ -190,7 +211,7 @@ cs-leetcode-learning/
 - [ ] OSI 7 層 vs TCP/IP 4 層：面試要能背出來並解釋每層做什麼
 - [ ] TCP vs UDP：三次握手、四次揮手、為什麼要這樣
 - [ ] HTTP vs HTTPS：SSL/TLS 握手流程（畫圖解釋）
-- [ ] HTTP/1.1 vs HTTP/2 vs HTTP/3：面試加分項
+- [ ] ~~HTTP/1.1 vs HTTP/2 vs HTTP/3~~ `[SKIP]`
 - [ ] DNS 解析流程：輸入 URL 到畫面出現經過了什麼
 - [ ] REST API 設計原則：stateless、資源導向、HTTP 動詞
 
@@ -251,63 +272,58 @@ cs-leetcode-learning/
 
 ---
 
-### 🔥 Phase 3：LeetCode C# Medium（第 11-16 週）
+### 🔥 Phase 3：LeetCode C# Medium 精選（第 11-14 週）
 
-#### Medium 題目清單（按模式分類）
+> 從 30 題縮減為 **12 題**，聚焦金融業/大型科技最常考的模式
 
-**Two Pointers / Sliding Window（第 11 週）**
+#### Medium 題目清單（精選 12 題）
+
+**Two Pointers / Sliding Window（第 11 週，共 3 題）**
 - [ ] #11 Container With Most Water
 - [ ] #15 3Sum ← Two Pointers + Sort
-- [ ] #167 Two Sum II
-- [ ] #424 Longest Repeating Character Replacement
-- [ ] #76 Minimum Window Substring ← 難但必練
+- [ ] #3 Longest Substring Without Repeating Characters ← Sliding Window
 
-**Stack / Queue（第 12 週）**
+**Stack / Binary Search（第 12 週，共 4 題）**
 - [ ] #155 Min Stack ← 設計題
-- [ ] #150 Evaluate Reverse Polish Notation
 - [ ] #739 Daily Temperatures ← Monotonic Stack
-- [ ] #853 Car Fleet
-
-**Binary Search（第 12 週）**
 - [ ] #153 Find Minimum in Rotated Sorted Array
 - [ ] #33 Search in Rotated Sorted Array
-- [ ] #74 Search a 2D Matrix
 
-**Tree / Graph（第 13-14 週）**
+**Tree / Graph（第 13 週，共 3 題）**
 - [ ] #102 Binary Tree Level Order Traversal ← BFS 模板
-- [ ] #230 Kth Smallest Element in a BST ← Inorder
 - [ ] #98 Validate Binary Search Tree
 - [ ] #200 Number of Islands ← BFS/DFS on Grid（必練）
-- [ ] #133 Clone Graph
-- [ ] #207 Course Schedule ← Topological Sort
-- [ ] #417 Pacific Atlantic Water Flow
 
-**DP（第 15 週）**
+**DP（第 14 週，共 2 題）**
 - [ ] #70 Climbing Stairs ← DP 入門
-- [ ] #198 House Robber
-- [ ] #213 House Robber II
-- [ ] #5 Longest Palindromic Substring
 - [ ] #322 Coin Change ← 必練
-- [ ] #1143 Longest Common Subsequence
-- [ ] #416 Partition Equal Subset Sum
 
-**Backtracking（第 16 週）**
-- [ ] #39 Combination Sum
-- [ ] #40 Combination Sum II
-- [ ] #78 Subsets
-- [ ] #46 Permutations
-- [ ] #79 Word Search ← Grid + Backtracking
+> 以下為原計畫跳過項目：
+> - ~~Backtracking 系列（5 題）~~ `[SKIP]`
+> - ~~#213 House Robber II、#5、#1143、#416~~ `[SKIP]`
+> - ~~#133 Clone Graph、#207、#417~~ `[SKIP]`
 
 ---
 
-### 🎯 Phase 4：面試衝刺（第 17-18 週）
+### 🎯 Phase 4：面試衝刺（第 15-18 週）
 
+**技術複習：**
 - [ ] 複習所有解題模式（`docs/leetcode/patterns.md`）
-- [ ] 每天 2 題：1 Easy 熱身 + 1 Medium 主練
 - [ ] 計時練習：Easy 15 分鐘、Medium 30 分鐘
 - [ ] 模擬面試：大聲說出思路，再下手寫 code
 - [ ] 複習計算機概論筆記，確保每個主題能口頭解釋
-- [ ] 準備「說說你的專案」：用 STAR 法（情況/任務/行動/結果）
+
+**履歷準備（同步進行）：**
+- [ ] 整理 GitHub LeetCode 解題 repo，補上 README
+- [ ] 撰寫履歷：VB.NET 經驗 → 強調 .NET 基礎；水處窗口 → 強調 SDLC 與跨部門溝通
+- [ ] 準備「說說你的專案/工作」：用 STAR 法（情況/任務/行動/結果）
+- [ ] 準備 SQL 實作題：JOIN、GROUP BY、子查詢（金融業必考）
+
+**投遞策略：**
+- [ ] 主攻：金融業 IT（玉山、台新、E.Sun、國泰、富邦）
+- [ ] 次攻：公用事業/傳產資訊部（水處相關背景有優勢）
+- [ ] 補攻：傳產上市公司資訊部（台達電、研華、鼎新）
+- [ ] 目標：第 16-18 週開始投履歷，8 月底前找到工作
 
 ---
 
