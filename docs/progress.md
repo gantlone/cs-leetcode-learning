@@ -7,12 +7,12 @@
 
 ## 當前狀態
 - 目前 Phase：Phase 1 - 資料結構（Graph）
-- 最後學到：Graph 表示法（Adjacency Matrix vs Adjacency List）
-- 下一步：Graph BFS vs DFS
+- 最後學到：Graph BFS vs DFS 走訪、BFS C# 模板
+- 下一步：用 BFS 找出兩點之間最短路徑（練習題）
 - 卡關問題：（無）
 
 ## 今日學習
-- 學了什麼：Graph 概念、Adjacency Matrix vs List 的空間差異、C# Dictionary<int, List<int>> 表示法
+- 學了什麼：BFS vs DFS 比喻、選哪個的判斷依據、BFS C# 模板視覺化走訪
 - 解了哪些題：（無）
 
 ## LeetCode 統計

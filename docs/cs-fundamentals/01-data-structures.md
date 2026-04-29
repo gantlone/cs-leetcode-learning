@@ -32,8 +32,8 @@
 - [x] 練習：手寫 BST insert + inorder traversal
 
 **Graph**
-- [ ] 圖的表示法：Adjacency List vs Adjacency Matrix（各自優劣）
-- [ ] BFS vs DFS：用途差異，面試選哪個的判斷依據
+- [x] 圖的表示法：Adjacency List vs Adjacency Matrix（各自優劣）
+- [x] BFS vs DFS：用途差異，面試選哪個的判斷依據
 - [ ] Topological Sort（拓樸排序）：為什麼面試常考（依賴關係問題）
 - [ ] Union-Find（Disjoint Set）：判斷連通性
 - [ ] 練習：用 BFS 找出兩點之間最短路徑
@@ -699,3 +699,142 @@ Inorder(5)
 
 最終 result = [1, 3, 4, 5, 7]
 ```
+
+---
+
+## Graph BFS vs DFS
+> 學習日期：2026-04-29
+
+**生活比喻：**
+- **BFS**：找人時先把 1 樓所有房間找完，再去 2 樓，一層一層往外擴。
+- **DFS**：一路往最深處走，走到死路才回頭換另一條路。
+
+**走訪順序範例：**
+```
+    1
+   / \
+  2   3
+ / \
+4   5
+
+BFS：1 → 2 → 3 → 4 → 5（一層一層）
+DFS：1 → 2 → 4 → 5 → 3（一條路到底）
+```
+
+**面試選哪個的判斷依據：**
+
+| 問題類型 | 選哪個 |
+|---|---|
+| 最短路徑 / 最少步數 | **BFS** |
+| 能不能到達 / 連通判斷 | DFS（BFS 也行）|
+| 找所有可能路徑 | **DFS** |
+
+**BFS 一定找到最短路徑的原因：**
+BFS 先把「距離 1」的點都找完，再找「距離 2」……第一次到達終點時就是最少步數。
+DFS 可能先衝進一條長路，找到的不是最短。
+
+**BFS C# 實作（面試模板）：**
+```csharp
+void BFS(Dictionary<int, List<int>> graph, int start)
+{
+    var visited = new HashSet<int>();
+    var queue = new Queue<int>();
+
+    queue.Enqueue(start);
+    visited.Add(start);
+
+    while (queue.Count > 0)
+    {
+        int node = queue.Dequeue();
+        Console.Write(node + " ");
+
+        foreach (int neighbor in graph[node])
+        {
+            if (!visited.Contains(neighbor))
+            {
+                visited.Add(neighbor);
+                queue.Enqueue(neighbor);
+            }
+        }
+    }
+}
+```
+
+**三個關鍵記憶點：**
+1. `Queue` 控制順序（FIFO = 先進先出 = 一層一層）
+2. `HashSet visited` 防止無限循環
+3. **先加入 visited 再 Enqueue**（不是 Dequeue 時才標記，否則同一個節點可能被加入多次）
+
+**BFS 視覺化（以上面那棵樹為例，start=1）：**
+```
+初始化：  Queue:[1]      Visited:{1}        輸出:（空）
+第1圈：   Dequeue=1      鄰居2,3加入        Queue:[2,3]    輸出:1
+第2圈：   Dequeue=2      鄰居4,5加入        Queue:[3,4,5]  輸出:1 2
+第3圈：   Dequeue=3      無鄰居             Queue:[4,5]    輸出:1 2 3
+第4圈：   Dequeue=4      無鄰居             Queue:[5]      輸出:1 2 3 4
+第5圈：   Dequeue=5      無鄰居             Queue:[]       輸出:1 2 3 4 5
+```
+
+---
+
+## 練習：BFS 找兩點最短路徑
+> 學習日期：2026-04-29
+
+**題目：** 給定圖和起點終點，回傳最少步數；無法到達回傳 -1。
+
+**解題步驟：**
+1. 跟 BFS 模板一樣，但 Queue 改存 `(節點, 目前步數)` 的 tuple
+2. 每次 Dequeue 後，先檢查是不是終點 → 是就直接 return steps
+3. 不是終點 → 把鄰居加入 Queue，步數 +1
+4. Queue 空了還沒找到 → return -1
+
+**關鍵差異（對比基本 BFS 模板）：**
+```
+基本 BFS：  queue.Enqueue(node)
+最短路徑：  queue.Enqueue((node, steps))   ← tuple 多帶一個步數
+```
+
+```csharp
+int ShortestPath(Dictionary<int, List<int>> graph, int start, int end)
+{
+    var visited = new HashSet<int>();
+    var queue = new Queue<(int node, int steps)>();
+
+    queue.Enqueue((start, 0));
+    visited.Add(start);
+
+    while (queue.Count > 0)
+    {
+        var (node, steps) = queue.Dequeue();
+
+        if (node == end) return steps;          // 找到了，直接回傳步數
+
+        foreach (int neighbor in graph[node])
+        {
+            if (!visited.Contains(neighbor))
+            {
+                visited.Add(neighbor);
+                queue.Enqueue((neighbor, steps + 1));  // 步數 +1
+            }
+        }
+    }
+
+    return -1; // Queue 空了還沒找到 → 無法到達
+}
+```
+
+**走訪視覺化（start=1, end=5）：**
+```
+圖：1--2--4
+    |     |
+    3-----5
+
+初始化：  Queue:[(1,0)]             Visited:{1}
+第1圈：   Dequeue=(1,0)  不是5      鄰居2,3加入  Queue:[(2,1),(3,1)]
+第2圈：   Dequeue=(2,1)  不是5      鄰居4加入    Queue:[(3,1),(4,2)]
+第3圈：   Dequeue=(3,1)  不是5      鄰居5加入    Queue:[(4,2),(5,2)]
+第4圈：   Dequeue=(4,2)  不是5      鄰居5已visited  Queue:[(5,2)]
+第5圈：   Dequeue=(5,2)  是5！      return 2  ✅
+```
+
+為什麼第4圈 5 已 visited？因為第3圈加入 5 時就標記了，防止重複加入。
